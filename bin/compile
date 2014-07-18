@@ -19,7 +19,7 @@ ERLROOT=${build}/otp
 #tarball=${ver}.tgz
 #OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
 tarball=otp_src_${ver}.tar.gz
-OTP_TARBALL_URL="https://erlang.org/download/${tarball}"
+OTP_TARBALL_URL="http://erlang.org/download/${tarball}"
 PROFILE=${HOME}/.profile.d
 
 echo "-----> Using Erlang/OTP $ver"
@@ -34,7 +34,7 @@ echo "-----> Using Erlang/OTP $ver"
     cd ${cache}
     echo "-------> Fetching Erlang/OTP $ver"
 #    curl -sO ${OTP_TARBALL_URL} || exit 1
-    curl -sO ${OTP_TARBALL_URL} > ${tarball} || exit 1
+    curl -sO ${OTP_TARBALL_URL} -o ${tarball} || exit 1
 )
 
 echo "-------> Unpacking Erlang/OTP $ver"
