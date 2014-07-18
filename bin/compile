@@ -15,9 +15,11 @@ if [ -f ${build}/.preferred_otp_version ]; then
     OTP_VERSION=$(cat ${build}/.preferred_otp_version)
 fi
 ver=${OTP_VERSION:=${DEFAULT_OTP_VERSION}}
-tarball=${ver}.tgz
-OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
 ERLROOT=${build}/otp
+#tarball=${ver}.tgz
+#OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
+tarball=otp_src_${ver}.tar.gz
+OTP_TARBALL_URL="https://erlang.org/download/${tarball}"
 PROFILE=${HOME}/.profile.d
 
 echo "-----> Using Erlang/OTP $ver"
@@ -51,7 +53,8 @@ if [ -f ${build}/.clean ]; then
     rm -Rf ${cache}/deps/*
 fi
 
-rsync -ahSD --ignore-errors --force --delete ${cache}/deps/ ${build}/deps/
+#rsync -ahSD --ignore-errors --force --delete ${cache}/deps/ ${build}/deps/
+cp -ar ${cache}/deps/ ${build}/deps/
 
 cd ${build}
 
@@ -79,5 +82,6 @@ cp ${bpdir}/opt/cb_config ./
 cp ${bpdir}/opt/start ./
 
 echo "-----> Caching dep builds"
-rsync -ahSD --ignore-errors --force --delete ${build}/deps/ ${cache}/deps/
+#rsync -ahSD --ignore-errors --force --delete ${build}/deps/ ${cache}/deps/
+cp -ar ${build}/deps/ ${cache}/deps/
 echo "-----> Build succeeded"
