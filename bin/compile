@@ -34,7 +34,7 @@ echo "-----> Using Erlang/OTP $ver"
     cd ${cache}
     echo "-------> Fetching Erlang/OTP $ver"
 #    curl -sO ${OTP_TARBALL_URL} || exit 1
-    curl -sO ${OTP_TARBALL_URL} > ${OTP_TARBALL_URL} || exit 1
+    curl -sO ${OTP_TARBALL_URL} > ${tarball} || exit 1
 )
 
 echo "-------> Unpacking Erlang/OTP $ver"
