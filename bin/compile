@@ -16,10 +16,10 @@ if [ -f ${build}/.preferred_otp_version ]; then
 fi
 ver=${OTP_VERSION:=${DEFAULT_OTP_VERSION}}
 ERLROOT=${build}/otp
-#tarball=${ver}.tgz
-#OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
-tarball=otp_src_${ver}.tar.gz
-OTP_TARBALL_URL="http://erlang.org/download/${tarball}"
+tarball=${ver}.tgz
+OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
+#tarball=otp_src_${ver}.tar.gz
+#OTP_TARBALL_URL="http://erlang.org/download/${tarball}"
 PROFILE=${HOME}/.profile.d
 
 echo "-----> Using Erlang/OTP $ver"
