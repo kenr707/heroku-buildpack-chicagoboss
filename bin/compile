@@ -68,6 +68,7 @@ fi
 echo "-----> Rewriting boss.config"
 cd ${build}
 #appname=`${bpdir}/opt/cb_config compile boss.config boss.config`
+echo "-------> Calculating `${bpdir}/opt/cb_config boss.config boss.config`"
 appname=`${bpdir}/opt/cb_config boss.config boss.config`
 echo "-------> Appname is ${appname}"
 mkdir -p ${appname}
