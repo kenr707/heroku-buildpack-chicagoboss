@@ -65,7 +65,7 @@ if [ ! -e "rebar" ]; then
   cp ${bpdir}/opt/rebar ./
 fi
 
-echo "-----> Dir is `pwd` with `ls`"
+ln -s `pwd` ../arguspm
 echo "-----> Building with Rebar"
 unset GIT_DIR
 ./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
