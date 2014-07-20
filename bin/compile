@@ -68,11 +68,18 @@ fi
 ln -s `pwd` ../arguspm
 echo "-----> Building with Rebar"
 unset GIT_DIR
-./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
+./rebar get-deps 2>&1 | sed -u 's/^/       /'
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
   echo "-----> Build failed"
   exit 1
 fi
+cd deps/boss
+make
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo "-----> Build failed"
+  exit 1
+fi
+cd ../..
 
 if [ -f ${bpdir}/opt/otp.sh ]; then
   mkdir -p ${PROFILE}
