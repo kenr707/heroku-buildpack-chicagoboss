@@ -82,7 +82,7 @@ if [ ${PIPESTATUS[0]} -ne 0 ]; then
 fi
 cd ../..
 echo "-----> Building with Rebar"
-./rebar compile 2>&1 | sed -u 's/^/       /'
+./rebar boss c=compile 2>&1 | sed -u 's/^/       /'
 
 if [ -f ${bpdir}/opt/otp.sh ]; then
   mkdir -p ${PROFILE}
