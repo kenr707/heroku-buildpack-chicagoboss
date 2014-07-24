@@ -82,9 +82,13 @@ if [ ${PIPESTATUS[0]} -ne 0 ]; then
 fi
 cd ../..
 echo "-----> Building with Rebar"
-sed -e 's/path\, .*\}/path, deps\/boss\}/' < boss.config > boss.config2
+sed -e 's/path\, .*\}/path, \"deps\/boss\"\}/' < boss.config > boss.config2
 mv boss.config2 boss.config
 ./rebar boss c=compile 2>&1 | sed -u 's/^/       /'
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo "-----> Build failed"
+  exit 1
+fi
 
 if [ -f ${bpdir}/opt/otp.sh ]; then
   mkdir -p ${PROFILE}
