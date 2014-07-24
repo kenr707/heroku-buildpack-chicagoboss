@@ -82,7 +82,8 @@ if [ ${PIPESTATUS[0]} -ne 0 ]; then
 fi
 cd ../..
 echo "-----> Building with Rebar"
-ln -s deps/boss ChicagoBoss
+sed -e 's/path\, .*\}/path, deps\/boss\}/' < boss.config > boss.config2
+mv boss.config2 boss.config
 ./rebar boss c=compile 2>&1 | sed -u 's/^/       /'
 
 if [ -f ${bpdir}/opt/otp.sh ]; then
