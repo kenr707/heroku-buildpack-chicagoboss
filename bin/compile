@@ -98,6 +98,8 @@ fi
 cp ${bpdir}/opt/cb_config ./
 cp ${bpdir}/opt/start ./
 
+find -name .git | xargs rm -rf
+
 echo "-----> Caching dep builds"
 #rsync -ahSD --ignore-errors --force --delete ${build}/deps/ ${cache}/deps/
 cp -ar ${build}/deps/ ${cache}/deps/
