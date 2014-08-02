@@ -107,4 +107,6 @@ cd ${build}
 cp ${bpdir}/opt/start ./
 cp ${bpdir}/opt/cb_config ./
 
+find -name .git | xargs rm -rf
+
 echo "-----> Build succeeded"
