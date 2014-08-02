@@ -10,7 +10,7 @@ build=$(cd "$1/" && pwd)
 test -z ${build} && exit
 cache=$(cd "$2/" && pwd)
 test -z ${cache} && exit
-DEFAULT_OTP_VERSION="OTP_R16B"
+DEFAULT_OTP_VERSION="OTP_R16B01"
 if [ -f ${build}/.preferred_otp_version ]; then
     OTP_VERSION=$(cat ${build}/.preferred_otp_version)
 fi
@@ -22,7 +22,12 @@ CB_ROOT=${build}/ChicagoBoss
 CB_CACHE_DIR=${cache}/ChicagoBoss
 #CB_CACHE_DIR=${build}/ChicagoBossCache
 PROFILE=${HOME}/.profile.d
-cb_ver="v0.8.7"
+
+DEFAULT_CB_VERSION="v0.8.12"
+if [ -f ${build}/.preferred_cb_version ]; then
+    CB_VERSION=$(cat ${build}/.preferred_cb_version)
+fi
+cb_ver=${CB_VERSION:=${DEFAULT_CB_VERSION}}
 
 CB_TARBALL_URL="https://nodeload.github.com/evanmiller/ChicagoBoss/tar.gz/${cb_ver}"
 cb_tarball="cb-${cb_ver}.tar.gz"
