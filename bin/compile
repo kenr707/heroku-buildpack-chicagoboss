@@ -17,7 +17,7 @@ fi
 ver=${OTP_VERSION:=${DEFAULT_OTP_VERSION}}
 tarball=${ver}.tgz
 #OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
-OTP_TARBALL_URL="https://codeload.github.com/erlang/otp/tar.gz/$(ver)"
+OTP_TARBALL_URL="https://codeload.github.com/erlang/otp/tar.gz/${ver}"
 ERLROOT=${build}/otp
 CB_ROOT=${build}/ChicagoBoss
 CB_CACHE_DIR=${cache}/ChicagoBoss
