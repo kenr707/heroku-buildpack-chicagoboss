@@ -45,7 +45,7 @@ echo "-----> Using Erlang/OTP $ver"
     rm -rf ${cache}/otp/* # be sure not to build up cruft
     cd ${cache}/otp
     echo "-------> Fetching Erlang/OTP $ver"
-    curl -sO ${OTP_TARBALL_URL} > $(tarball) || exit 1
+    curl -sO ${OTP_TARBALL_URL} > ${tarball} || exit 1
 )
 
 echo "-------> Unpacking Erlang/OTP $ver"
