@@ -16,7 +16,8 @@ if [ -f ${build}/.preferred_otp_version ]; then
 fi
 ver=${OTP_VERSION:=${DEFAULT_OTP_VERSION}}
 tarball=${ver}.tgz
-OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
+#OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
+OTP_TARBALL_URL="https://codeload.github.com/erlang/otp/tar.gz/$(ver)"
 ERLROOT=${build}/otp
 CB_ROOT=${build}/ChicagoBoss
 CB_CACHE_DIR=${cache}/ChicagoBoss
@@ -29,7 +30,9 @@ if [ -f ${build}/.preferred_cb_version ]; then
 fi
 cb_ver=${CB_VERSION:=${DEFAULT_CB_VERSION}}
 
-CB_TARBALL_URL="https://nodeload.github.com/evanmiller/ChicagoBoss/tar.gz/${cb_ver}"
+CB_TARBALL_URL="https://codeload.github.com/ChicagoBoss/ChicagoBoss/tar.gz/${cb_ver}"
+#CB_TARBALL_URL="https://nodeload.github.com/evanmiller/ChicagoBoss/tar.gz/${cb_ver}"
+#CB_TARBALL_URL="https://github.com/ChicagoBoss/ChicagoBoss/archive/${cb_ver}".tar.gz
 cb_tarball="cb-${cb_ver}.tar.gz"
 echo "-----> Using Erlang/OTP $ver"
 
@@ -42,7 +45,7 @@ echo "-----> Using Erlang/OTP $ver"
     rm -rf ${cache}/otp/* # be sure not to build up cruft
     cd ${cache}/otp
     echo "-------> Fetching Erlang/OTP $ver"
-    curl -sO ${OTP_TARBALL_URL} || exit 1
+    curl -sO ${OTP_TARBALL_URL} > $(tarball) || exit 1
 )
 
 echo "-------> Unpacking Erlang/OTP $ver"
