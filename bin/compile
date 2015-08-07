@@ -47,7 +47,6 @@ echo "-----> Using Erlang/OTP $ver"
     echo "-------> Fetching Erlang/OTP $ver"
     curl -s ${OTP_TARBALL_URL} > ${tarball} || exit 1
 #    if [ -e .debug_print ]; then
-      ls -lRa /
       echo curl -sO ${OTP_TARBALL_URL} > ${tarball}
       echo "Cache at ${cache}"
       pwd
@@ -57,6 +56,7 @@ echo "-----> Using Erlang/OTP $ver"
 
 echo "-------> Unpacking Erlang/OTP $ver"
 mkdir -p ${ERLROOT}
+echo tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
 tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
 echo "-------> Installing Erlang/OTP $ver"
 ln -s ${ERLROOT} /app/otp
