@@ -45,7 +45,7 @@ echo "-----> Using Erlang/OTP $ver"
 #    if [ -e .debug_print ]; then
       echo "Cache at ${cache}"
       pwd
-      ls -lR /
+      ls -lR 
 #    fi
     rm -rf ${cache}/otp/* # be sure not to build up cruft
     cd ${cache}/otp
