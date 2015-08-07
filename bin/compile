@@ -42,11 +42,11 @@ echo "-----> Using Erlang/OTP $ver"
     # Already cached?
     test -f ${cache}/otp/${tarball} && exit
 
-    if [ -e .debug_print ]; then
+#    if [ -e .debug_print ]; then
       echo "Cache at ${cache}"
       pwd
       ls -lR /
-    fi
+#    fi
     rm -rf ${cache}/otp/* # be sure not to build up cruft
     cd ${cache}/otp
     echo "-------> Fetching Erlang/OTP $ver"
