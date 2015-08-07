@@ -47,7 +47,7 @@ echo "-----> Using Erlang/OTP $ver"
     echo "-------> Fetching Erlang/OTP $ver"
     curl -s ${OTP_TARBALL_URL} > ${tarball} || exit 1
 #    if [ -e .debug_print ]; then
-      echo curl -sO ${OTP_TARBALL_URL} > ${tarball}
+      echo "curl -sO ${OTP_TARBALL_URL}"
       echo "Cache at ${cache}"
       pwd
       ls -lR ${cache}
