@@ -61,6 +61,7 @@ echo tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
 tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
 echo "-------> Installing Erlang/OTP $ver"
 ln -s ${ERLROOT} /app/otp
+find -name Install
 ${ERLROOT}/otp/Install -minimal /app/otp
 
 export PATH=/app/otp/bin:$PATH
