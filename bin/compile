@@ -61,10 +61,9 @@ echo tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
 tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
 echo "-------> Installing Erlang/OTP $ver"
 ln -s ${ERLROOT} /app/otp
-find / -name escript
 #${ERLROOT}/Install -minimal /app/otp
 
-export PATH=/app/otp/bin:$PATH
+export PATH=/app/otp/erts-*/bin:$PATH
 echo "-----> Using ChicagoBoss ${cb_ver}"
 unset GIT_DIR
 (
