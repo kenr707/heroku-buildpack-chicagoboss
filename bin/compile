@@ -64,6 +64,7 @@ ln -s ${ERLROOT} /app/otp
 #${ERLROOT}/Install -minimal /app/otp
 
 export PATH=`find ${build}/otp -name escript`:$PATH
+echo Path is ${PATH}
 echo "-----> Using ChicagoBoss ${cb_ver}"
 unset GIT_DIR
 (
