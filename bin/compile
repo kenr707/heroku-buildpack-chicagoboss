@@ -34,6 +34,12 @@ CB_TARBALL_URL="https://codeload.github.com/ChicagoBoss/ChicagoBoss/tar.gz/${cb_
 #CB_TARBALL_URL="https://nodeload.github.com/evanmiller/ChicagoBoss/tar.gz/${cb_ver}"
 #CB_TARBALL_URL="https://github.com/ChicagoBoss/ChicagoBoss/archive/${cb_ver}".tar.gz
 cb_tarball="cb-${cb_ver}.tar.gz"
+
+if [ -e ${build}/.clean_cache ]; then
+	echo "------->" Cleaning cache
+	rm -rf ${cache}
+fi
+
 echo "-----> Using Erlang/OTP $ver"
 
 (
