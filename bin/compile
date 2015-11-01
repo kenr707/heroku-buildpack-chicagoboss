@@ -75,7 +75,7 @@ echo "-----> Using Erlang/OTP $ver"
 
 echo "-------> Unpacking Erlang/OTP $ver"
 mkdir -p ${ERLROOT}
-tar zxf ${cache}/${tarball} -C ${ERLROOT} --strip-components=2
+tar zxf ${cache}/${tarball} -C ${ERLROOT} ${strip}
 echo "-------> Installing Erlang/OTP $ver"
 ln -s ${ERLROOT} `pwd`/otp
 ${ERLROOT}/Install -minimal `pwd`/otp
