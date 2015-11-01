@@ -15,9 +15,24 @@ if [ -f ${build}/.preferred_otp_version ]; then
     OTP_VERSION=$(cat ${build}/.preferred_otp_version)
 fi
 ver=${OTP_VERSION:=${DEFAULT_OTP_VERSION}}
+case $STACK in
+    cedar-14)
+        echo "-----> Stack is cedar-14"
+        tarball="${ver}_cedar-14.tgz"
+        location="runtimes/"
+        strip=""
+        ;;
+    *)
+        echo "-----> Stack is cedar"
+        tarball="${ver}.tgz"
+        location=""
+        strip="--strip-components=2"
+        ;;
+esac
+OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${location}${tarball}"
 tarball=${ver}.tgz
 #OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
-OTP_TARBALL_URL="https://codeload.github.com/erlang/otp/tar.gz/${ver}"
+#OTP_TARBALL_URL="https://codeload.github.com/erlang/otp/tar.gz/${ver}"
 ERLROOT=${build}/otp
 CB_ROOT=${build}/ChicagoBoss
 CB_CACHE_DIR=${cache}/ChicagoBoss
@@ -36,65 +51,84 @@ CB_TARBALL_URL="https://codeload.github.com/ChicagoBoss/ChicagoBoss/tar.gz/${cb_
 cb_tarball="cb-${cb_ver}.tar.gz"
 
 if [ -e ${build}/.clean_cache ]; then
-	echo "------->" Cleaning cache
-	rm -rf ${cache}
+	echo "-------> Cleaning cache"
+	rm -rf ${cache}/*
 fi
 
 echo "-----> Using Erlang/OTP $ver"
 
 (
     set -e
-    mkdir -p ${cache}/otp
-    # Already cached?
-    test -f ${cache}/otp/${tarball} && exit
 
-    rm -rf ${cache}/otp/* # be sure not to build up cruft
-    cd ${cache}/otp
+    # Already cached?
+    test -f ${cache}/${tarball} && exit
+
+    rm -rf ${cache}/* # be sure not to build up cruft
+    cd ${cache}
     echo "-------> Fetching Erlang/OTP $ver"
-    curl -s ${OTP_TARBALL_URL} > ${tarball} || exit 1
-#    if [ -e .debug_print ]; then
-      echo "curl -sO ${OTP_TARBALL_URL}"
-      echo "Cache at ${cache}"
-      pwd
-      ls -lR ${cache}
-#    fi
+    curl -sSO ${OTP_TARBALL_URL}
+
+    echo "-------> Finished fetching tarball, checking"
+    file ${tarball} | grep -ql gzip
+
 )
 
 echo "-------> Unpacking Erlang/OTP $ver"
 mkdir -p ${ERLROOT}
-file ${cache}/otp/${tarball}
-echo tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
-tar zxf ${cache}/otp/${tarball} -C ${ERLROOT} --strip-components=2
+tar zxf ${cache}/${tarball} -C ${ERLROOT} --strip-components=2
 echo "-------> Installing Erlang/OTP $ver"
-ln -s ${ERLROOT} otp
-#ln -s ${ERLROOT} /app/otp
-#${ERLROOT}/Install -minimal /app/otp
+ln -s ${ERLROOT} `pwd`/otp
+${ERLROOT}/Install -minimal `pwd`/otp
 
-export PATH=$(dirname `find ${build}/otp -name escript`):$PATH
-export PATH=$(dirname `find ${build}/otp -name erl`):$PATH
-echo Path is ${PATH}
+PATH=/app/otp/bin:$PATH
+export PATH
+
+cd $build
+
+TOOL="none"
+
+## for now, prefer rebar :/
+if [ ! -e "rebar" ]; then
+    if [ ! -e "rebar3" -a ! -e "rebar.lock" ]; then
+        echo "-----> Installing Rebar from buildpack"
+        cp ${bpdir}/opt/rebar ./
+        TOOL="rebar"
+    else
+        # if lockfile but no binary
+        if [ ! -e "rebar3" ]; then
+            echo "-----> Installing Rebar3 from rebar3.org nightly"
+            curl -o rebar3 https://s3.amazonaws.com/rebar3/rebar3
+            chmod +x rebar3
+        fi
+        TOOL="rebar3"
+    fi
+else
+    TOOL="rebar"
+fi
+
 echo "-----> Using ChicagoBoss ${cb_ver}"
 unset GIT_DIR
-(
-    set -e
-    # Already cached?
-    test -f ${CB_CACHE_DIR}/ebin/boss.beam && exit
-    echo "-----> Not in cache, fetching from ${CB_TARBALL_URL}"
-    mkdir -p ${CB_CACHE_DIR}
-    rm -rf ${CB_CACHE_DIR}/* # be sure not to build up cruft
-    cd ${cache}
-    echo "-------> Fetching ChicagoBoss ${cb_ver}"
-    curl -s ${CB_TARBALL_URL} > ${cb_tarball} || exit 1
-    echo "-------> Unpacking ChicagoBoss ${cb_ver}"
-    tar zxf ${cache}/${cb_tarball} -C ${CB_CACHE_DIR} --strip-components=1
-    cd ${CB_CACHE_DIR}
-    echo "-------> Compiling ChicagoBoss ${cb_ver}"
-    ./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
-    if [ ${PIPESTATUS[0]} -ne 0 ]; then
-      echo "-----> ChicagoBoss Build failed"
-      exit 1
-    fi
-)
+
+#(
+#    set -e
+#    # Already cached?
+#    test -f ${CB_CACHE_DIR}/ebin/boss.beam && exit
+#    echo "-----> Not in cache, fetching from ${CB_TARBALL_URL}"
+#    mkdir -p ${CB_CACHE_DIR}
+#    rm -rf ${CB_CACHE_DIR}/* # be sure not to build up cruft
+#    cd ${cache}
+#    echo "-------> Fetching ChicagoBoss ${cb_ver}"
+#    curl -s ${CB_TARBALL_URL} > ${cb_tarball} || exit 1
+#    echo "-------> Unpacking ChicagoBoss ${cb_ver}"
+#    tar zxf ${cache}/${cb_tarball} -C ${CB_CACHE_DIR} --strip-components=1
+#    cd ${CB_CACHE_DIR}
+#    echo "-------> Compiling ChicagoBoss ${cb_ver}"
+#    ./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
+#    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+#      echo "-----> ChicagoBoss Build failed"
+#      exit 1
+#    fi
+#)
 echo "-----> Rewriting boss.config"
 cd ${build}
 appname=`${bpdir}/opt/cb_config compile boss.config boss.config`
@@ -104,17 +138,30 @@ find . -maxdepth 1 | grep -v ./${appname} | grep -v ./otp | grep './' | xargs -i
 echo "-------> linking ${appname} as application"
 ln -s ${appname} application
 echo "-------> Deploying ChicagoBoss ${cb_ver} to build dir"
-cp -R ${CB_CACHE_DIR} ${CB_ROOT}
-
+#cp -R ${CB_CACHE_DIR} ${CB_ROOT}
 echo "-------> Compiling App"
 cd ${build}/${appname}
 
-./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
-if [ ${PIPESTATUS[0]} -ne 0 ]; then
-  echo "-----> Build failed"
-  exit 1
-fi
+case $TOOL in
+    "rebar")
+        echo "-----> Building with Rebar"
+        ./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
+        ;;
+    "rebar3")
+        echo "-----> Building release with Rebar3"
+        TERM=dumb
+        ./rebar3 update
+        ./rebar3 release -i true --dev-mode false  2>&1 | sed -u 's/^/       /'
+        ;;
+esac
 
+#./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
+#if [ ${PIPESTATUS[0]} -ne 0 ]; then
+#  echo "-----> Build failed"
+#  exit 1
+#fi
+
+ln -s ${build}/${appname}/deps/boss ${build}/ChicagoBoss
 
 if [ -f ${bpdir}/opt/otp.sh ]; then
   mkdir -p ${PROFILE}
