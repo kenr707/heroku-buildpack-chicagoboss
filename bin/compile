@@ -161,7 +161,8 @@ esac
 #  exit 1
 #fi
 
-ln -s ${build}/${appname}/deps/boss ${build}/ChicagoBoss
+#ln -s ${build}/${appname}/deps/boss ${build}/ChicagoBoss
+ln -s /app/${appname}/deps/boss ${build}/ChicagoBoss
 
 if [ -f ${bpdir}/opt/otp.sh ]; then
   mkdir -p ${PROFILE}
