@@ -146,6 +146,7 @@ case $TOOL in
     "rebar")
         echo "-----> Building with Rebar"
         ./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
+	echo "-----> Building ChicagoBoss app with Rebar"
         ./rebar boss c=compile 2>&1 | sed -u 's/^/       /'
         ;;
     "rebar3")
