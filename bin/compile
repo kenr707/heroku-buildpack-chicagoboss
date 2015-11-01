@@ -30,7 +30,6 @@ case $STACK in
         ;;
 esac
 OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${location}${tarball}"
-tarball=${ver}.tgz
 #OTP_TARBALL_URL="https://s3.amazonaws.com/heroku-buildpack-erlang/${tarball}"
 #OTP_TARBALL_URL="https://codeload.github.com/erlang/otp/tar.gz/${ver}"
 ERLROOT=${build}/otp
