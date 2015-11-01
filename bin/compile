@@ -68,8 +68,9 @@ echo "-----> Using Erlang/OTP $ver"
     echo "-------> Fetching Erlang/OTP $ver"
     curl -sSO ${OTP_TARBALL_URL}
 
-#    echo "-------> Finished fetching tarball, checking"
-#    file ${tarball} | grep -ql gzip
+    echo "-------> Finished fetching tarball, checking"
+    ls -Rl
+    file ${tarball} | grep -ql gzip
 
 )
 
