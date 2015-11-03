@@ -158,10 +158,10 @@ case $TOOL in
 esac
 
 #./rebar get-deps compile 2>&1 | sed -u 's/^/       /'
-#if [ ${PIPESTATUS[0]} -ne 0 ]; then
-#  echo "-----> Build failed"
-#  exit 1
-#fi
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo "-----> Build failed"
+  exit 1
+fi
 
 #ln -s ${build}/${appname}/deps/boss ${build}/ChicagoBoss
 ln -s /app/${appname}/deps/boss ${build}/ChicagoBoss
