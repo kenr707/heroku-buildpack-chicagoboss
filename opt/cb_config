@@ -17,7 +17,8 @@ main(["runtime", Src, Dest])->
   HerokuSettings = [{port, HttpPort},{db_host, Host}, 
                     {db_port, DbPort}, {db_username, User},
                     {db_password, Pass}, {db_database, DbName},
-                    {db_adapter, pgsql}, {path, "../ChicagoBoss"}],
+%                    {db_adapter, pgsql}, {path, "../ChicagoBoss"}],
+                    {db_adapter, pgsql}, {path, "./deps/boss"}],
   BossConfigured = lists:foldl(fun({K, V}, Acc)->
     dict:store(K, V, Acc)
   end, BossParams, HerokuSettings),
@@ -38,7 +39,8 @@ main(["compile", Src, Dest])->
   {ok, BossTerms} = dict:find(boss, Params),
   BossParams = dict:from_list(BossTerms),
   {ok, [AppName]} = dict:find(applications, BossParams),
-  BossParams2 =  dict:store(path,  "../ChicagoBoss", BossParams),
+%  BossParams2 =  dict:store(path,  "../ChicagoBoss", BossParams),
+  BossParams2 =  dict:store(path,  "./deps/boss", BossParams),
   Params2 = dict:store(boss, dict:to_list(BossParams2), Params),
   io:format("~s", [AppName]),
   {ok, S} = file:open(Dest, write),
